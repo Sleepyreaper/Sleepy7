@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		09B25B34E08A2DEE50BD7465 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5206A448234446789A4B11 /* GameStats.swift */; };
+		0C74A8A327D066C3CD9D9DFF /* MainMenuViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6252E07CCC4239DC4ADC30F /* MainMenuViews.swift */; };
+		0E4F5AC377A7D07DE7307E9F /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B94D104439C00FAB3C193D0 /* Player.swift */; };
+		1B00C40199266113814276DD /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B7042AB56669AA21E6DAD /* SectionHeaderView.swift */; };
+		2EBA4373DED678780BD7BF47 /* FlipSevenOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F5F4A687BF8F7C95B9C71D /* FlipSevenOverlayView.swift */; };
+		46120B6B14CE2A490FCB0213 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D91EE58D4BE2D54FE4FEBA /* ContentView.swift */; };
+		4F40A9B0D3A57E030FFA8446 /* ActionStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BEF1F2E9157545A4E0E16AC /* ActionStatusView.swift */; };
+		52AE74EA4C70DA66466E0F7C /* CardAnimationSplash.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED52A8AF80076AE7486EACA4 /* CardAnimationSplash.swift */; };
+		56D0AE62375BC399DBC1D8A6 /* FreezeOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A3FC0852A18C5748E70C5 /* FreezeOverlayView.swift */; };
+		59D5F897382AB79E36C496CC /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505EF71A880B446EC799A0CA /* GameView.swift */; };
+		5A254D76047975AB8BEAAC6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFAEC227AAFA6E453969A6F9 /* Assets.xcassets */; };
+		5B9D070AF532DC69017E449E /* PlayerHandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFA7B2E23B3F106032F7859 /* PlayerHandView.swift */; };
+		5DE36D628EB35171A4632F90 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA177C2C3377E95CF6EDE59 /* GameCenterManager.swift */; };
+		80A62C053FA084E97076A692 /* StatsDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AEFD61FC3CA06915F6F06B /* StatsDisplayView.swift */; };
+		816AB84B2B0CA467112587A2 /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C2B5B7E5B6DB85F11EF943 /* Deck.swift */; };
+		8588461856307A47A02D8E1C /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9BE65865D2F250110FE030 /* GameEngine.swift */; };
+		9393FBA22FBDA42E11FD8F9F /* AIPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87469E753C6DA5EDA03B7A36 /* AIPlayer.swift */; };
+		9AD2EB7A303D323C3A453FB3 /* WinOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DAA635A2192CDCA71C2B93 /* WinOverlayView.swift */; };
+		A35BEF0B42C3EE078D4AC629 /* HomeIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71C896A1DC21CBEB8AA4B0 /* HomeIconView.swift */; };
+		B4E95390ED8A125D6C8AA91B /* RulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AA4123E589D6C9BC32B7FA /* RulesView.swift */; };
+		B984A515A26C742F5F98C4A7 /* Sleepy7App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4C73B5B2CB3F5115098B0B /* Sleepy7App.swift */; };
+		C0AD87F63B392A4510AF0814 /* FlipDeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE224FAB17B7404F6EB9F2FE /* FlipDeckView.swift */; };
+		C2FFCE6BA51A57D19D8E1665 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6318CB4A4AEED3FF81BDC /* Theme.swift */; };
+		C6C18995BAC4ED356254D5E1 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFD7F6EFEE60AF32068D4F9 /* Card.swift */; };
+		D0C53EBE1FE9D2C517EAAA8E /* StatsScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FA2E229066CD16D4031347 /* StatsScreenView.swift */; };
+		D20D1626E4DA975D2B2B7951 /* GameButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CE643023B5F1B681773BDD /* GameButtons.swift */; };
+		D89E078F1F715FE29F5BB15B /* CardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238A35EB91F947DC66515C7F /* CardViews.swift */; };
+		F6599D8F183380A6DB43AE5B /* BustOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D265EFA74556388E1FB882B /* BustOverlayView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		086A3FC0852A18C5748E70C5 /* FreezeOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreezeOverlayView.swift; sourceTree = "<group>"; };
+		0B94D104439C00FAB3C193D0 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		0C5206A448234446789A4B11 /* GameStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStats.swift; sourceTree = "<group>"; };
+		0F9BE65865D2F250110FE030 /* GameEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
+		1C4C73B5B2CB3F5115098B0B /* Sleepy7App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sleepy7App.swift; sourceTree = "<group>"; };
+		1D265EFA74556388E1FB882B /* BustOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BustOverlayView.swift; sourceTree = "<group>"; };
+		238A35EB91F947DC66515C7F /* CardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViews.swift; sourceTree = "<group>"; };
+		2C0613CEB51C86FAC0F32511 /* Sleepy7.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sleepy7.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A71C896A1DC21CBEB8AA4B0 /* HomeIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeIconView.swift; sourceTree = "<group>"; };
+		505EF71A880B446EC799A0CA /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		574B7042AB56669AA21E6DAD /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
+		6BEF1F2E9157545A4E0E16AC /* ActionStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionStatusView.swift; sourceTree = "<group>"; };
+		7DFD7F6EFEE60AF32068D4F9 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		83DAA635A2192CDCA71C2B93 /* WinOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinOverlayView.swift; sourceTree = "<group>"; };
+		86BB4A048AF45294C66D5BE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		87469E753C6DA5EDA03B7A36 /* AIPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIPlayer.swift; sourceTree = "<group>"; };
+		96D91EE58D4BE2D54FE4FEBA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9CFA7B2E23B3F106032F7859 /* PlayerHandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerHandView.swift; sourceTree = "<group>"; };
+		A0AA4123E589D6C9BC32B7FA /* RulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesView.swift; sourceTree = "<group>"; };
+		B4C2B5B7E5B6DB85F11EF943 /* Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
+		BE224FAB17B7404F6EB9F2FE /* FlipDeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipDeckView.swift; sourceTree = "<group>"; };
+		C3E6318CB4A4AEED3FF81BDC /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		D6F5F4A687BF8F7C95B9C71D /* FlipSevenOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipSevenOverlayView.swift; sourceTree = "<group>"; };
+		DFA177C2C3377E95CF6EDE59 /* GameCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManager.swift; sourceTree = "<group>"; };
+		E6252E07CCC4239DC4ADC30F /* MainMenuViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViews.swift; sourceTree = "<group>"; };
+		E8AEFD61FC3CA06915F6F06B /* StatsDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDisplayView.swift; sourceTree = "<group>"; };
+		ED52A8AF80076AE7486EACA4 /* CardAnimationSplash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardAnimationSplash.swift; sourceTree = "<group>"; };
+		EFAEC227AAFA6E453969A6F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F4FA2E229066CD16D4031347 /* StatsScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsScreenView.swift; sourceTree = "<group>"; };
+		F8CE643023B5F1B681773BDD /* GameButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameButtons.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		03FC13674D5F4FA6948D8C1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C0613CEB51C86FAC0F32511 /* Sleepy7.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4FCB9AFE131C6A09057B17BA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				87469E753C6DA5EDA03B7A36 /* AIPlayer.swift */,
+				7DFD7F6EFEE60AF32068D4F9 /* Card.swift */,
+				B4C2B5B7E5B6DB85F11EF943 /* Deck.swift */,
+				DFA177C2C3377E95CF6EDE59 /* GameCenterManager.swift */,
+				0F9BE65865D2F250110FE030 /* GameEngine.swift */,
+				0C5206A448234446789A4B11 /* GameStats.swift */,
+				0B94D104439C00FAB3C193D0 /* Player.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		719FCB9CCD1B56D709203AA6 = {
+			isa = PBXGroup;
+			children = (
+				928C44991B0A77CA74394FAC /* Sleepy7 */,
+				03FC13674D5F4FA6948D8C1D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		86E4359B3990A8F779D37813 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				1C4C73B5B2CB3F5115098B0B /* Sleepy7App.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		928C44991B0A77CA74394FAC /* Sleepy7 */ = {
+			isa = PBXGroup;
+			children = (
+				86BB4A048AF45294C66D5BE9 /* Info.plist */,
+				86E4359B3990A8F779D37813 /* App */,
+				4FCB9AFE131C6A09057B17BA /* Models */,
+				C63A3923328C70E9E7DEC69E /* Resources */,
+				A7CAE1DA7983F9FB0348EE88 /* UI */,
+			);
+			path = Sleepy7;
+			sourceTree = "<group>";
+		};
+		A7CAE1DA7983F9FB0348EE88 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				1D265EFA74556388E1FB882B /* BustOverlayView.swift */,
+				ED52A8AF80076AE7486EACA4 /* CardAnimationSplash.swift */,
+				96D91EE58D4BE2D54FE4FEBA /* ContentView.swift */,
+				D6F5F4A687BF8F7C95B9C71D /* FlipSevenOverlayView.swift */,
+				086A3FC0852A18C5748E70C5 /* FreezeOverlayView.swift */,
+				505EF71A880B446EC799A0CA /* GameView.swift */,
+				A0AA4123E589D6C9BC32B7FA /* RulesView.swift */,
+				F4FA2E229066CD16D4031347 /* StatsScreenView.swift */,
+				C3E6318CB4A4AEED3FF81BDC /* Theme.swift */,
+				83DAA635A2192CDCA71C2B93 /* WinOverlayView.swift */,
+				CBDD07C4FE9CD3490DF3E99E /* Components */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		C63A3923328C70E9E7DEC69E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EFAEC227AAFA6E453969A6F9 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CBDD07C4FE9CD3490DF3E99E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				6BEF1F2E9157545A4E0E16AC /* ActionStatusView.swift */,
+				238A35EB91F947DC66515C7F /* CardViews.swift */,
+				BE224FAB17B7404F6EB9F2FE /* FlipDeckView.swift */,
+				F8CE643023B5F1B681773BDD /* GameButtons.swift */,
+				3A71C896A1DC21CBEB8AA4B0 /* HomeIconView.swift */,
+				E6252E07CCC4239DC4ADC30F /* MainMenuViews.swift */,
+				9CFA7B2E23B3F106032F7859 /* PlayerHandView.swift */,
+				574B7042AB56669AA21E6DAD /* SectionHeaderView.swift */,
+				E8AEFD61FC3CA06915F6F06B /* StatsDisplayView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B0178C266227BEB85E4F4AAB /* Sleepy7 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A264AC3902F302B0BEBC0B24 /* Build configuration list for PBXNativeTarget "Sleepy7" */;
+			buildPhases = (
+				9E719126429482269D21E8EC /* Sources */,
+				4FB9103494B16ECC8425AA78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Sleepy7;
+			packageProductDependencies = (
+			);
+			productName = Sleepy7;
+			productReference = 2C0613CEB51C86FAC0F32511 /* Sleepy7.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ACC25960C4E7E21125D7769B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B0178C266227BEB85E4F4AAB = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = C6BB5062F973C1002ED6CFDD /* Build configuration list for PBXProject "Sleepy7" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 719FCB9CCD1B56D709203AA6;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B0178C266227BEB85E4F4AAB /* Sleepy7 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4FB9103494B16ECC8425AA78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A254D76047975AB8BEAAC6E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9E719126429482269D21E8EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9393FBA22FBDA42E11FD8F9F /* AIPlayer.swift in Sources */,
+				4F40A9B0D3A57E030FFA8446 /* ActionStatusView.swift in Sources */,
+				F6599D8F183380A6DB43AE5B /* BustOverlayView.swift in Sources */,
+				C6C18995BAC4ED356254D5E1 /* Card.swift in Sources */,
+				52AE74EA4C70DA66466E0F7C /* CardAnimationSplash.swift in Sources */,
+				D89E078F1F715FE29F5BB15B /* CardViews.swift in Sources */,
+				46120B6B14CE2A490FCB0213 /* ContentView.swift in Sources */,
+				816AB84B2B0CA467112587A2 /* Deck.swift in Sources */,
+				C0AD87F63B392A4510AF0814 /* FlipDeckView.swift in Sources */,
+				2EBA4373DED678780BD7BF47 /* FlipSevenOverlayView.swift in Sources */,
+				56D0AE62375BC399DBC1D8A6 /* FreezeOverlayView.swift in Sources */,
+				D20D1626E4DA975D2B2B7951 /* GameButtons.swift in Sources */,
+				5DE36D628EB35171A4632F90 /* GameCenterManager.swift in Sources */,
+				8588461856307A47A02D8E1C /* GameEngine.swift in Sources */,
+				09B25B34E08A2DEE50BD7465 /* GameStats.swift in Sources */,
+				59D5F897382AB79E36C496CC /* GameView.swift in Sources */,
+				A35BEF0B42C3EE078D4AC629 /* HomeIconView.swift in Sources */,
+				0C74A8A327D066C3CD9D9DFF /* MainMenuViews.swift in Sources */,
+				0E4F5AC377A7D07DE7307E9F /* Player.swift in Sources */,
+				5B9D070AF532DC69017E449E /* PlayerHandView.swift in Sources */,
+				B4E95390ED8A125D6C8AA91B /* RulesView.swift in Sources */,
+				1B00C40199266113814276DD /* SectionHeaderView.swift in Sources */,
+				B984A515A26C742F5F98C4A7 /* Sleepy7App.swift in Sources */,
+				80A62C053FA084E97076A692 /* StatsDisplayView.swift in Sources */,
+				D0C53EBE1FE9D2C517EAAA8E /* StatsScreenView.swift in Sources */,
+				C2FFCE6BA51A57D19D8E1665 /* Theme.swift in Sources */,
+				9AD2EB7A303D323C3A453FB3 /* WinOverlayView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1E32F77590FD646A69EFC8E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sleepy.sleepy7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		5A840A8A5C25F71D524E8A20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7V755L673A;
+				INFOPLIST_FILE = Sleepy7/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CFD5887E126D39A44B4F4B2B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7V755L673A;
+				INFOPLIST_FILE = Sleepy7/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D39928E345E74843E1664B24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sleepy.sleepy7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A264AC3902F302B0BEBC0B24 /* Build configuration list for PBXNativeTarget "Sleepy7" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFD5887E126D39A44B4F4B2B /* Debug */,
+				5A840A8A5C25F71D524E8A20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C6BB5062F973C1002ED6CFDD /* Build configuration list for PBXProject "Sleepy7" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D39928E345E74843E1664B24 /* Debug */,
+				1E32F77590FD646A69EFC8E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ACC25960C4E7E21125D7769B /* Project object */;
+}

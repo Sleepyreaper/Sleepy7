@@ -1,0 +1,47 @@
+import Foundation
+
+enum ActionType: String, CaseIterable {
+    case freeze = "Freeze"
+    case flipThree = "Flip Three"
+    case secondChance = "Second Chance"
+}
+
+enum ModifierType: String, CaseIterable {
+    case times2 = "x2"
+    case plus2 = "+2"
+    case plus4 = "+4"
+    case plus6 = "+6"
+    case plus8 = "+8"
+    case plus10 = "+10"
+
+    var isMultiplier: Bool {
+        self == .times2
+    }
+
+    var flatBonus: Int {
+        switch self {
+        case .times2: return 0
+        case .plus2: return 2
+        case .plus4: return 4
+        case .plus6: return 6
+        case .plus8: return 8
+        case .plus10: return 10
+        }
+    }
+}
+
+struct Card: Identifiable, Equatable {
+    enum Kind: Equatable {
+        case number(Int)
+        case action(ActionType)
+        case modifier(ModifierType)
+    }
+
+    let id: UUID
+    let kind: Kind
+
+    init(_ kind: Kind) {
+        self.id = UUID()
+        self.kind = kind
+    }
+}

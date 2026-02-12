@@ -1,0 +1,38 @@
+name: Sleepy7
+options:
+  bundleIdPrefix: com.sleepy
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    PRODUCT_BUNDLE_IDENTIFIER: com.sleepy.sleepy7
+targets:
+  Sleepy7:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    info:
+      path: Sleepy7/Info.plist
+      properties:
+        CFBundleDisplayName: "Sleepy 7"
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    sources:
+      - Sleepy7
+    resources:
+      - Sleepy7/Resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+    capabilities:
+      gameCenter:
+        enabled: true
