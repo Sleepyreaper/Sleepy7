@@ -1,0 +1,11 @@
+participant UI as SwiftUI View
+    participant Engine as GameEngine
+    participant FX as AnimationCoordinator
+    participant AV as AVService
+
+    UI->>Engine: player taps Draw
+    Engine-->>UI: publish updated state
+    Engine->>FX: emit cardDraw event
+    FX-->>UI: animation event
+    UI->>AV: play(drawSound)
+    UI->>AV: vibrate(lightTap)
