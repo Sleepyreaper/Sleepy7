@@ -1,12 +1,12 @@
 import Foundation
 
-enum ActionType: String, CaseIterable {
+enum ActionType: String, CaseIterable, Codable, Sendable {
     case freeze = "Freeze"
     case flipThree = "Flip Three"
     case secondChance = "Second Chance"
 }
 
-enum ModifierType: String, CaseIterable {
+enum ModifierType: String, CaseIterable, Codable, Sendable {
     case times2 = "x2"
     case plus2 = "+2"
     case plus4 = "+4"
@@ -14,9 +14,7 @@ enum ModifierType: String, CaseIterable {
     case plus8 = "+8"
     case plus10 = "+10"
 
-    var isMultiplier: Bool {
-        self == .times2
-    }
+    var isMultiplier: Bool { self == .times2 }
 
     var flatBonus: Int {
         switch self {
@@ -30,8 +28,8 @@ enum ModifierType: String, CaseIterable {
     }
 }
 
-struct Card: Identifiable, Equatable {
-    enum Kind: Equatable {
+struct Card: Identifiable, Equatable, Codable, Sendable {
+    enum Kind: Equatable, Codable, Sendable {
         case number(Int)
         case action(ActionType)
         case modifier(ModifierType)
@@ -40,8 +38,8 @@ struct Card: Identifiable, Equatable {
     let id: UUID
     let kind: Kind
 
-    init(_ kind: Kind) {
-        self.id = UUID()
+    init(id: UUID = UUID(), _ kind: Kind) {
+        self.id = id
         self.kind = kind
     }
 }
