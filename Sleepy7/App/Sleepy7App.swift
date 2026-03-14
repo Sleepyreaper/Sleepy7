@@ -2,12 +2,12 @@ import SwiftUI
 
 @main
 struct Sleepy7App: App {
-    @StateObject private var engine = GameEngine()
+    @StateObject private var container = AppContainer.bootstrap()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(engine)
+            RootView()
+                .environmentObject(container)
         }
     }
 }
