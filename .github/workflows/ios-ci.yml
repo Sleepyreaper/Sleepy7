@@ -1,0 +1,4 @@
+.ci/scripts/setup_appstoreconnect_key.sh
+.ci/scripts/import_signing_assets.sh
+.ci/scripts/xcode_build.sh
+.ci/ExportOptions.plist
