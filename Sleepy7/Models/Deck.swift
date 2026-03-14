@@ -1,38 +1,49 @@
 import Foundation
+import DequeModule
 
-struct Deck {
-    static func standardDeck() -> [Card] {
-        var cards: [Card] = []
+struct Deck: Sendable {
+    private(set) var cards: Deque<Card>
 
-        // Number cards: number of copies equals the card value, with one 0 card.
-        cards.append(Card(.number(0)))
+    init(cards: Deque<Card>) {
+        self.cards = cards
+    }
+
+    static func standard() -> Deck {
+        var built: [Card] = []
+
+        built.append(Card(.number(0)))
         for value in 1...12 {
             for _ in 0..<value {
-                cards.append(Card(.number(value)))
+                built.append(Card(.number(value)))
             }
         }
 
-        // Action cards: 3 each.
         for _ in 0..<3 {
-            cards.append(Card(.action(.freeze)))
-            cards.append(Card(.action(.flipThree)))
-            cards.append(Card(.action(.secondChance)))
+            built.append(Card(.action(.freeze)))
+            built.append(Card(.action(.flipThree)))
+            built.append(Card(.action(.secondChance)))
         }
 
-        // Modifier cards: one each.
-        cards.append(Card(.modifier(.times2)))
-        cards.append(Card(.modifier(.plus2)))
-        cards.append(Card(.modifier(.plus4)))
-        cards.append(Card(.modifier(.plus6)))
-        cards.append(Card(.modifier(.plus8)))
-        cards.append(Card(.modifier(.plus10)))
+        built.append(Card(.modifier(.times2)))
+        built.append(Card(.modifier(.plus2)))
+        built.append(Card(.modifier(.plus4)))
+        built.append(Card(.modifier(.plus6)))
+        built.append(Card(.modifier(.plus8)))
+        built.append(Card(.modifier(.plus10)))
 
-        return cards
+        return Deck(cards: Deque(Self.shuffle(built)))
     }
-    
-    /// Fisher-Yates shuffle for proper randomization
+
+    mutating func draw() -> Card? {
+        cards.popFirst()
+    }
+
+    var count: Int { cards.count }
+
     static func shuffle(_ cards: [Card]) -> [Card] {
         var shuffled = cards
+        guard shuffled.count > 1 else { return shuffled }
+
         for i in stride(from: shuffled.count - 1, through: 1, by: -1) {
             let j = Int.random(in: 0...i)
             if i != j {
