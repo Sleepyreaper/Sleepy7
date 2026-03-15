@@ -1,31 +1,42 @@
 import GameKit
+import UIKit
 
-class GameCenterManager: NSObject {
+final class GameCenterManager: NSObject {
     static let shared = GameCenterManager()
-    
+
     var presentAuthViewController: ((UIViewController) -> Void)?
-    
+
+    private let displayNameDisclosureKey = "hasAcknowledgedGameCenterDisplayNameDisclosure"
+
     override init() {
         super.init()
     }
-    
-    func getLocalPlayerName() -> String? {
-        let displayName = GKLocalPlayer.local.displayName
-        if !displayName.isEmpty {
-            return displayName
-        }
-        return nil
+
+    func hasAcknowledgedDisplayNameDisclosure() -> Bool {
+        UserDefaults.standard.bool(forKey: displayNameDisclosureKey)
     }
-    
+
+    func acknowledgeDisplayNameDisclosure() {
+        UserDefaults.standard.set(true, forKey: displayNameDisclosureKey)
+    }
+
+    func getLocalPlayerNameIfPermitted() -> String? {
+        guard hasAcknowledgedDisplayNameDisclosure() else {
+            return nil
+        }
+
+        let displayName = GKLocalPlayer.local.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+        return displayName.isEmpty ? nil : displayName
+    }
+
     func authenticatePlayer(completion: @escaping (Bool) -> Void) {
         GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
             if let viewController = viewController {
-                // User needs to authenticate - present the view controller
                 DispatchQueue.main.async {
                     self?.presentAuthViewController?(viewController)
                 }
-            } else if error != nil {
-                print("Game Center authentication failed: \(error?.localizedDescription ?? "")")
+            } else if let error {
+                print("Game Center authentication failed: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
