@@ -1,0 +1,120 @@
+name: Release TestFlight
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-testflight-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  testflight:
+    name: Build and Upload to TestFlight
+    runs-on: macos-14
+    timeout-minutes: 60
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Select Xcode
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo xcode-select -s /Applications/Xcode_15.4.app
+          xcodebuild -version
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Install gems
+        shell: bash
+        run: |
+          set -euo pipefail
+          bundle install --path vendor/bundle
+
+      - name: Write App Store Connect API key
+        shell: bash
+        env:
+          APP_STORE_CONNECT_API_KEY_JSON: ${{ secrets.APP_STORE_CONNECT_API_KEY_JSON }}
+        run: |
+          set -euo pipefail
+          test -n "${APP_STORE_CONNECT_API_KEY_JSON}"
+          umask 077
+          mkdir -p "$RUNNER_TEMP/asc"
+          printf '%s' "$APP_STORE_CONNECT_API_KEY_JSON" > "$RUNNER_TEMP/asc/asc_key.json"
+
+      - name: Configure match SSH key
+        shell: bash
+        env:
+          MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          umask 077
+          printf '%s\n' "$MATCH_SSH_PRIVATE_KEY" > ~/.ssh/match_rsa
+          chmod 600 ~/.ssh/match_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host github.com
+            IdentityFile ~/.ssh/match_rsa
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Sync signing assets with match
+        shell: bash
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          APP_STORE_CONNECT_API_KEY_PATH: ${{ runner.temp }}/asc/asc_key.json
+        run: |
+          set -euo pipefail
+          bundle exec fastlane ios signing_ci
+
+      - name: Build and upload
+        shell: bash
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          APP_STORE_CONNECT_API_KEY_PATH: ${{ runner.temp }}/asc/asc_key.json
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          ADMOB_BANNER_UNIT_ID: ${{ secrets.ADMOB_BANNER_UNIT_ID }}
+          ADMOB_REWARDED_UNIT_ID: ${{ secrets.ADMOB_REWARDED_UNIT_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_CONFIG_BASE64 }}
+        run: |
+          set -euo pipefail
+          bundle exec fastlane ios beta
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fastlane-logs
+          path: |
+            fastlane/logs
+            ~/Library/Logs/gym
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Cleanup sensitive temp files
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/asc"
+          rm -f ~/.ssh/match_rsa ~/.ssh/config
