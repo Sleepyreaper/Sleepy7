@@ -1,83 +1,71 @@
 import SwiftUI
 
 struct RulesView: View {
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
-        ZStack {
-            VegasTableBackgroundView()
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("Rules")
-                        .font(.custom("Marker Felt", size: 36))
-                        .foregroundStyle(GameTheme.goldAccent)
-                        .shadow(color: GameTheme.goldAccent.opacity(0.6), radius: 6, x: 0, y: 0)
-                        .padding(.bottom, 8)
-
-                    RuleCard(title: "Objective") {
-                        Text("Score the most points by revealing unique number cards. Draw a duplicate and you bust for the round.")
-                            .font(GameTheme.bodyFont(15))
-                            .foregroundStyle(Color.white.opacity(0.9))
-                    }
-
-                    RuleCard(title: "Flip 7 Bonus") {
-                        Text("Reveal 7 unique number cards to end the round and score +15 points.")
-                            .font(GameTheme.bodyFont(15))
-                            .foregroundStyle(Color.white.opacity(0.9))
-                    }
-
-                    RuleCard(title: "Actions") {
-                        Text("Freeze: target banks points and is out.\nFlip Three: target draws 3 in a row (stop on bust or Flip 7).\nSecond Chance: discard it to ignore one duplicate number.")
-                            .font(GameTheme.bodyFont(15))
-                            .foregroundStyle(Color.white.opacity(0.9))
-                    }
-
-                    RuleCard(title: "Modifiers") {
-                        Text("x2 doubles your number total. +2/+4/+6/+8/+10 add after multiplying.")
-                            .font(GameTheme.bodyFont(15))
-                            .foregroundStyle(Color.white.opacity(0.9))
-                    }
-
-                    RuleCard(title: "Round End") {
-                        Text("All players stayed or busted, or one player flips 7.")
-                            .font(GameTheme.bodyFont(15))
-                            .foregroundStyle(Color.white.opacity(0.9))
-                    }
+        NavigationStack {
+            ScreenContainer(
+                title: "Rules",
+                subtitle: "Everything players need, in a cleaner format with stronger hierarchy and better readability."
+            ) {
+                SectionCard(title: "Objective", systemImage: "target") {
+                    rulesText("Build the strongest score you can without busting. Number cards add to your total, modifiers boost your hand, and special actions can swing the round.")
                 }
-                .padding()
+
+                SectionCard(title: "How Busting Works", systemImage: "exclamationmark.octagon.fill") {
+                    rulesBullet("Drawing a duplicate number can bust your hand.")
+                    rulesBullet("A busted hand scores zero for the round.")
+                    rulesBullet("Second Chance may protect you from one duplicate depending on the game state.")
+                }
+
+                SectionCard(title: "Special Cards", systemImage: "sparkles.rectangle.stack.fill") {
+                    rulesBullet("Freeze: lock another player out of further actions.")
+                    rulesBullet("Flip Three: reveal three cards in sequence for a dramatic turn swing.")
+                    rulesBullet("Second Chance: protection against a bust-causing duplicate.")
+                }
+
+                SectionCard(title: "Modifiers", systemImage: "plus.forwardslash.minus") {
+                    rulesBullet("Flat modifiers add bonus points to your final round score.")
+                    rulesBullet("x2 doubles your subtotal before flat bonuses are applied.")
+                    rulesBullet("Flip Seven grants an extra bonus when achieved.")
+                }
+
+                SectionCard(title: "Accessibility", systemImage: "figure.wave.circle.fill") {
+                    rulesBullet("Dynamic Type is supported throughout the interface.")
+                    rulesBullet("Buttons and labels include VoiceOver-friendly text.")
+                    rulesBullet("High-contrast colors are used to keep the table legible.")
+                }
+            }
+            .navigationTitle("Rules")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                        .foregroundStyle(DesignSystem.Colors.accent)
+                }
             }
         }
     }
-}
 
-private struct RuleCard<Content: View>: View {
-    let title: String
-    let content: Content
-    
-    init(title: String, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.content = content()
+    private func rulesText(_ text: String) -> some View {
+        Text(text)
+            .font(DesignSystem.Typography.body)
+            .foregroundStyle(DesignSystem.Colors.textSecondary)
+            .fixedSize(horizontal: false, vertical: true)
     }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(title)
-                .font(.custom("Marker Felt", size: 20))
-                            .foregroundStyle(GameTheme.champagne)
-                            .shadow(color: GameTheme.goldAccent.opacity(0.4), radius: 4, x: 0, y: 0)
+
+    private func rulesBullet(_ text: String) -> some View {
+        HStack(alignment: .top, spacing: DesignSystem.Spacing.sm) {
+            Image(systemName: "circle.fill")
+                .font(.system(size: 7))
+                .foregroundStyle(DesignSystem.Colors.accent)
+                .padding(.top, 6)
+
+            Text(text)
+                .font(DesignSystem.Typography.body)
+                .foregroundStyle(DesignSystem.Colors.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.black.opacity(0.35))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(GameTheme.goldAccent.opacity(0.2), lineWidth: 1)
-                }
-        )
-        .shadow(color: .black.opacity(0.3), radius: 6, x: 0, y: 3)
     }
-}
-
-#Preview {
-    RulesView()
 }
