@@ -1,0 +1,45 @@
+name: Weekly Monetization Report
+
+on:
+  schedule:
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-monetization
+  cancel-in-progress: true
+
+jobs:
+  monetize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate weekly monetization summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 ops/analytics/generate_weekly_report.py
+
+      - name: Commit updated README and report
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet README.md ops/analytics/output/; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md ops/analytics/output/
+          git commit -m "chore: update weekly monetization badges"
+          git push
