@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop, "feature/**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-build-test:
+    name: Lint, Build, Test
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Select Xcode
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo xcode-select -s /Applications/Xcode_15.4.app
+          xcodebuild -version
+
+      - name: Resolve Swift packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild -resolvePackageDependencies -project Sleepy7.xcodeproj -scheme Sleepy7
+
+      - name: Lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -name "*.swift" -print0 | xargs -0 swift -frontend -typecheck
+
+      - name: Build
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project Sleepy7.xcodeproj \
+            -scheme Sleepy7 \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -derivedDataPath DerivedData \
+            build
+
+      - name: Test
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project Sleepy7.xcodeproj \
+            -scheme Sleepy7 \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -derivedDataPath DerivedData \
+            test \
+            -resultBundlePath TestResults.xcresult
+
+      - name: Upload Test Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcresult
+          path: TestResults.xcresult
+          if-no-files-found: warn
+          retention-days: 14
