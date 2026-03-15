@@ -2,430 +2,357 @@ import SwiftUI
 
 struct GameView: View {
     @EnvironmentObject private var engine: GameEngine
+    @EnvironmentObject private var session: AppSession
     @Environment(\.dismiss) private var dismiss
-    @State private var appear = false
-    @State private var flipFaceUp = false
-    @State private var animatedCard: Card? = nil
-    @State private var duplicateCard: Card? = nil
-    @State private var showDuplicate = false
-    @State private var animateToHand = false
-    @State private var isAnimating = false
-    @State private var showBustOverlay = false
-    @State private var showFreezeOverlay = false
-    @State private var showFlipSevenOverlay = false
-    @State private var showWinOverlay = false
-    @State private var showFreezeTargetSelector = false
-    @State private var pendingFreezeCard: Card? = nil
-    @State private var lastBustCheck: [UUID: Bool] = [:]
-    @State private var lastFrozenName: String? = nil
-    @State private var lastFlipSevenName: String? = nil
-    @State private var lastCardId: UUID? = nil
 
-    private var activePlayerTotal: Int? {
-        guard let index = engine.activePlayerIndex, engine.players.indices.contains(index) else { return nil }
-        return engine.players[index].totalScore
-    }
+    @State private var showRewardPrompt = false
+    @State private var rewardLoading = false
+    @State private var showPrivacySheet = false
 
     var body: some View {
         ZStack {
-            VegasTableBackgroundView()
+            LinearGradient.casinoBackground
+                .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Multiplayer scores at top
-                if engine.players.count > 1 {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            ForEach(engine.players) { player in
-                                PlayerScoreChip(
-                                    player: player,
-                                    isActive: engine.activePlayerIndex == engine.players.firstIndex(where: { $0.id == player.id })
-                                )
-                            }
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                    }
-                    .background(Color.black.opacity(0.3))
-                    .frame(height: 90)
-                } else if let totalScore = activePlayerTotal {
-                    // Single player score (original)
-                    HStack {
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 2) {
-                            Text("Total")
-                                .font(.custom("Marker Felt", size: 13))
-                                .foregroundStyle(Color.white.opacity(0.7))
-                            Text("\(totalScore)")
-                                .font(.custom("Marker Felt", size: 54))
-                                .foregroundStyle(GameTheme.goldAccent)
-                                .shadow(color: GameTheme.goldAccent.opacity(0.7), radius: 12, x: 0, y: 0)
-                        }
-                        .padding(.trailing, 16)
-                        .padding(.top, 12)
-                    }
-                    .frame(height: 90)
-                }
+                header
 
                 ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    if engine.players.count == 1 {
-                        SectionHeaderView(
-                            title: engine.roundEndedReason ?? (engine.activePlayerName.map { "Active: \($0)" } ?? ""),
-                            subtitle: ""
-                        )
-                        .opacity(appear ? 1 : 0)
-                        .offset(y: appear ? 0 : 8)
-                    } else {
-                        SectionHeaderView(
-                            title: engine.roundEndedReason ?? "",
-                            subtitle: ""
-                        )
-                        .opacity(appear ? 1 : 0)
-                        .offset(y: appear ? 0 : 8)
+                    VStack(spacing: DesignSystem.Spacing.lg) {
+                        roundSummary
+                        playersSection
+                        actionsSection
+                        statusSection
                     }
-
-                    FlipDeckView(
-                        card: animatedCard, 
-                        isFaceUp: flipFaceUp,
-                        duplicateCard: duplicateCard,
-                        showDuplicate: showDuplicate,
-                        animateToHand: animateToHand
-                    )
-                        .frame(height: 220)
-                        .opacity(appear ? 1 : 0)
-                        .offset(y: appear ? 0 : 12)
-
-                    HStack(spacing: 12) {
-                        Button(engine.isRoundOver ? "Next Round" : engine.lastAction.contains("start") ? "Draw" : "Hit") {
-                            if engine.isRoundOver {
-                                engine.startNextRound()
-                            } else {
-                                engine.hit()
-                            }
-                        }
-                        .buttonStyle(PrimaryGameButtonStyle())
-                        .disabled((!engine.canAct && !engine.isRoundOver) || isAnimating || engine.isActivePlayerAI)
-
-                        Button("Stay") {
-                            engine.stay()
-                        }
-                        .buttonStyle(SecondaryGameButtonStyle())
-                        .disabled(!engine.canAct || isAnimating || engine.isActivePlayerAI)
-                    }
-                    
-                    if engine.isActivePlayerAI {
-                        HStack(spacing: 8) {
-                            ProgressView()
-                                .tint(GameTheme.goldAccent)
-                            Text("AI thinking...")
-                                .font(GameTheme.bodyFont(14))
-                                .foregroundStyle(GameTheme.champagne.opacity(0.8))
-                        }
-                        .padding(.vertical, 8)
-                    }
-
-                    if !engine.lastAction.isEmpty {
-                        ActionStatusView(text: engine.lastAction)
-                    }
-
-                    Text("Deck: \(engine.remainingDeckCount) cards")
-                        .font(GameTheme.bodyFont(13))
-                        .foregroundStyle(Color.white.opacity(0.7))
-
-                    ForEach(engine.players) { player in
-                        PlayerHandView(
-                            player: player,
-                            hand: engine.hand(for: player),
-                            roundScore: engine.roundScore(for: player)
-                        )
-                    }
+                    .padding(.horizontal, DesignSystem.Spacing.lg)
+                    .padding(.top, DesignSystem.Spacing.md)
+                    .padding(.bottom, DesignSystem.Spacing.xl)
+                    .frame(maxWidth: DesignSystem.Layout.maxContentWidth)
+                    .frame(maxWidth: .infinity)
                 }
-                .padding()
-            }
-            }
 
-            if showBustOverlay {
-                BustOverlayView {
-                    showBustOverlay = false
+                if session.shouldShowAds {
+                    bottomBanner
+                        .padding(.horizontal, DesignSystem.Spacing.lg)
+                        .padding(.bottom, DesignSystem.Spacing.sm)
                 }
             }
 
-            if showFreezeOverlay {
-                FreezeOverlayView {
-                    showFreezeOverlay = false
-                }
-            }
-
-            if showFlipSevenOverlay {
-                FlipSevenOverlayView {
-                    showFlipSevenOverlay = false
-                }
-            }
-            
-            if showWinOverlay, let winnerName = engine.winnerName {
-                let winner = engine.players.first(where: { $0.name == winnerName })
-                WinOverlayView(
-                    winnerName: winnerName,
-                    winnerScore: winner?.totalScore ?? 0,
-                    onDismiss: {
-                        showWinOverlay = false
-                    },
-                    onNewGame: {
-                        showWinOverlay = false
-                        dismiss()
+            if showRewardPrompt {
+                Color.black.opacity(0.45)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        showRewardPrompt = false
                     }
+
+                RewardedSecondChancePrompt(
+                    isLoading: rewardLoading,
+                    consentReady: session.canShowRewardedSecondChance,
+                    onWatchAd: simulateRewardedSecondChance,
+                    onDismiss: { showRewardPrompt = false },
+                    onReviewPrivacy: { showPrivacySheet = true }
                 )
+                .padding(DesignSystem.Spacing.lg)
+                .frame(maxWidth: 560)
+                .transition(.scale.combined(with: .opacity))
+                .zIndex(2)
             }
-            
-            if showFreezeTargetSelector {
-                ZStack {
-                    Color.black.opacity(0.6)
-                        .ignoresSafeArea()
-                    
-                    FreezeTargetSelectorView(
-                        players: engine.players.filter { player in
-                            guard let activeIndex = engine.activePlayerIndex else { return false }
-                            let isNotActivePlayer = player.id != engine.players[activeIndex].id
-                            let isNotFrozen = !engine.hand(for: player).isFrozen
-                            return isNotActivePlayer && isNotFrozen
-                        },
-                        onSelect: { targetPlayer in
-                            showFreezeTargetSelector = false
-                            engine.freezePlayer(targetPlayer)
-                            pendingFreezeCard = nil
-                        },
-                        onCancel: {
-                            showFreezeTargetSelector = false
-                            engine.pendingFreezeAction = false
-                            pendingFreezeCard = nil
-                        }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
+        .animation(.spring(response: 0.34, dampingFraction: 0.88), value: showRewardPrompt)
+        .onChange(of: engine.roundEndedReason) { _, newValue in
+            guard let newValue else { return }
+            if newValue.localizedCaseInsensitiveContains("bust"), session.shouldShowAds {
+                showRewardPrompt = true
+            }
+        }
+        .sheet(isPresented: $showPrivacySheet) {
+            PrivacyInfoView()
+                .environmentObject(session)
+        }
+    }
+
+    private var header: some View {
+        HStack(spacing: DesignSystem.Spacing.md) {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .foregroundStyle(DesignSystem.Colors.textPrimary)
+                    .frame(width: 44, height: 44)
+                    .background(
+                        Circle()
+                            .fill(DesignSystem.Colors.surfaceElevated)
                     )
+            }
+            .accessibilityLabel("Back to main menu")
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Round \(engine.roundNumber)")
+                    .font(DesignSystem.Typography.title3)
+                    .foregroundStyle(DesignSystem.Colors.textPrimary)
+
+                Text(engine.activePlayerName ?? "Waiting for table")
+                    .font(DesignSystem.Typography.footnote)
+                    .foregroundStyle(DesignSystem.Colors.textSecondary)
+            }
+
+            Spacer()
+
+            VStack(alignment: .trailing, spacing: 2) {
+                Text("Deck")
+                    .font(DesignSystem.Typography.caption)
+                    .foregroundStyle(DesignSystem.Colors.textMuted)
+
+                Text("\(engine.remainingDeckCount)")
+                    .font(DesignSystem.Typography.title3)
+                    .foregroundStyle(DesignSystem.Colors.accent)
+                    .accessibilityLabel("\(engine.remainingDeckCount) cards remaining in deck")
+            }
+        }
+        .padding(.horizontal, DesignSystem.Spacing.lg)
+        .padding(.top, DesignSystem.Spacing.sm)
+        .padding(.bottom, DesignSystem.Spacing.md)
+        .background(DesignSystem.Colors.background.opacity(0.55))
+    }
+
+    private var roundSummary: some View {
+        SectionCard(title: "Table Summary", systemImage: "suit.club.fill") {
+            VStack(spacing: DesignSystem.Spacing.md) {
+                HStack(spacing: DesignSystem.Spacing.sm) {
+                    StatPill(label: "Players", value: "\(engine.players.count)", accent: DesignSystem.Colors.info)
+                    StatPill(label: "Dealer", value: dealerName, accent: DesignSystem.Colors.accent)
                 }
-            }
-        }
-        .navigationTitle("Game")
-        .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            withAnimation(.easeOut(duration: 0.6)) {
-                appear = true
-            }
-            lastBustCheck = Dictionary(uniqueKeysWithValues: engine.players.map { ($0.id, false) })
-        }
-        .onChange(of: engine.lastDrawnCard?.id) { _ in
-            guard let card = engine.lastDrawnCard else { return }
-            if engine.lastDrawSource == .initialDeal { return }
-            
-            // Prevent duplicate animations for same card
-            if lastCardId == card.id { return }
-            lastCardId = card.id
-            
-            // Reset all animation states first
-            animatedCard = nil
-            flipFaceUp = false
-            animateToHand = false
-            showDuplicate = false
-            duplicateCard = nil
-            isAnimating = true
-            
-            // Small delay to ensure state is reset
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                // Check for duplicate number card
-                var isDuplicate = false
-                if let activeIndex = engine.activePlayerIndex {
-                    let hand = engine.hand(for: engine.players[activeIndex])
-                    if case .number(let value) = card.kind {
-                        let count = hand.numberCards.filter({ $0 == value }).count
-                        if count > 1 {
-                            isDuplicate = true
-                            duplicateCard = card
-                        }
-                    }
+
+                if let reason = engine.roundEndedReason, !reason.isEmpty {
+                    bannerText(reason, color: DesignSystem.Colors.warning, icon: "exclamationmark.triangle.fill")
                 }
-                
-                animatedCard = card
-                
-                // Check if it's FlipThree sequence (slower animation)
-                let isFlipThree = engine.lastDrawSource == .flipThree
-                let flipDuration = isFlipThree ? 1.0 : 0.6
-                
-                withAnimation(.easeInOut(duration: flipDuration)) {
-                    flipFaceUp = true
+
+                if let winnerName = engine.winnerName, !winnerName.isEmpty {
+                    bannerText("\(winnerName) wins the round", color: DesignSystem.Colors.success, icon: "crown.fill")
                 }
-                
-                // Show duplicate after flip
-                if isDuplicate {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + flipDuration + 0.2) {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                            showDuplicate = true
-                        }
-                    }
+
+                if !engine.lastAction.isEmpty {
+                    bannerText(engine.lastAction, color: DesignSystem.Colors.info, icon: "sparkles")
                 }
-                
-                // Animate card to hand after flip completes
-                DispatchQueue.main.asyncAfter(deadline: .now() + flipDuration + (isDuplicate ? 0.6 : 0.2)) {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        animateToHand = true
-                    }
-                    // Reset after animation
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                        animateToHand = false
-                        showDuplicate = false
-                        duplicateCard = nil
-                        animatedCard = nil
-                        flipFaceUp = false
-                        lastCardId = nil
-                        isAnimating = false
-                    }
-                }
-            }
-        }
-        .onChange(of: engine.roundNumber) { _ in
-            lastBustCheck = Dictionary(uniqueKeysWithValues: engine.players.map { ($0.id, false) })
-        }
-        .onChange(of: engine.lastAction) { _ in
-            for player in engine.players {
-                let currentHand = engine.hand(for: player)
-                let wasBusted = lastBustCheck[player.id] ?? false
-                if currentHand.isBusted && !wasBusted {
-                    showBustOverlay = true
-                    lastBustCheck[player.id] = true
-                }
-            }
-        }
-        .onChange(of: engine.frozenPlayerName) { _ in
-            if let frozenName = engine.frozenPlayerName, frozenName != lastFrozenName {
-                showFreezeOverlay = true
-                lastFrozenName = frozenName
-            }
-        }
-        .onChange(of: engine.flippedSevenPlayerName) { _ in
-            if let sevenName = engine.flippedSevenPlayerName, sevenName != lastFlipSevenName {
-                showFlipSevenOverlay = true
-                lastFlipSevenName = sevenName
-            }
-        }
-        .onChange(of: engine.winnerName) { _ in
-            if engine.winnerName != nil {
-                showWinOverlay = true
-            }
-        }
-        .onChange(of: engine.pendingFreezeAction) { _ in
-            if engine.pendingFreezeAction {
-                showFreezeTargetSelector = true
             }
         }
     }
-}
 
-struct PlayerScoreChip: View {
-    let player: Player
-    let isActive: Bool
-    
-    var body: some View {
-        VStack(spacing: 4) {
-            Text(player.name)
-                .font(.custom("Marker Felt", size: 14))
-                .foregroundStyle(isActive ? GameTheme.goldAccent : GameTheme.champagne)
-                .lineLimit(1)
-            Text("\(player.totalScore)")
-                .font(.custom("Marker Felt", size: 22))
-                .fontWeight(.bold)
-                .foregroundStyle(isActive ? GameTheme.goldAccent : Color.white)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(isActive ? Color.black.opacity(0.5) : Color.black.opacity(0.3))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(isActive ? GameTheme.goldAccent.opacity(0.6) : Color.white.opacity(0.2), lineWidth: isActive ? 2 : 1)
-                }
-        )
-        .shadow(color: isActive ? GameTheme.goldAccent.opacity(0.3) : .clear, radius: 8, x: 0, y: 0)
-    }
-}
+    private var playersSection: some View {
+        SectionCard(title: "Players", systemImage: "person.3.sequence.fill") {
+            LazyVStack(spacing: DesignSystem.Spacing.md) {
+                ForEach(Array(engine.players.enumerated()), id: \.element.id) { index, player in
+                    let hand = engine.hand(for: player)
 
-struct FreezeTargetSelectorView: View {
-    let players: [Player]
-    let onSelect: (Player) -> Void
-    let onCancel: () -> Void
-    
-    var body: some View {
-        ZStack {
-            Color.black.opacity(0.7)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    onCancel()
-                }
-            
-            VStack(spacing: 24) {
-                VStack(spacing: 12) {
-                    Text("❄️")
-                        .font(.system(size: 48))
-                    Text("Select Opponent to Freeze")
-                        .font(.custom("Marker Felt", size: 26))
-                        .foregroundStyle(GameTheme.goldAccent)
-                    Text("Choose which player to freeze")
-                        .font(GameTheme.bodyFont(14))
-                        .foregroundStyle(GameTheme.champagne.opacity(0.8))
-                }
-                
-                VStack(spacing: 12) {
-                    ForEach(players) { player in
-                        Button {
-                            onSelect(player)
-                        } label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(player.name)
-                                        .font(.custom("Marker Felt", size: 20))
-                                        .foregroundStyle(GameTheme.champagne)
-                                    Text("Total: \(player.totalScore)")
-                                        .font(GameTheme.bodyFont(13))
-                                        .foregroundStyle(Color.white.opacity(0.7))
+                    VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(player.name)
+                                    .font(DesignSystem.Typography.headline)
+                                    .foregroundStyle(DesignSystem.Colors.textPrimary)
+
+                                Text(statusText(for: hand, isActive: index == engine.activePlayerIndex))
+                                    .font(DesignSystem.Typography.footnote)
+                                    .foregroundStyle(DesignSystem.Colors.textSecondary)
+                            }
+
+                            Spacer()
+
+                            Text("\(engine.roundScore(for: player))")
+                                .font(DesignSystem.Typography.title2)
+                                .foregroundStyle(index == engine.activePlayerIndex ? DesignSystem.Colors.accent : DesignSystem.Colors.textPrimary)
+                                .accessibilityLabel("\(player.name) score \(engine.roundScore(for: player))")
+                        }
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: DesignSystem.Spacing.xs) {
+                                ForEach(Array(hand.numberCards.enumerated()), id: \.offset) { _, value in
+                                    chip(value: "\(value)", color: DesignSystem.Colors.info)
                                 }
-                                Spacer()
-                                Image(systemName: "snowflake")
-                                    .foregroundStyle(Color(hex: "1ABC9C"))
-                                    .font(.system(size: 24))
+
+                                ForEach(Array(hand.modifiers.enumerated()), id: \.offset) { _, modifier in
+                                    chip(value: modifier.rawValue, color: DesignSystem.Colors.accent)
+                                }
+
+                                if hand.hasSecondChance {
+                                    chip(value: "2nd", color: DesignSystem.Colors.success)
+                                }
+
+                                if hand.flippedSeven {
+                                    chip(value: "Flip 7", color: DesignSystem.Colors.warning)
+                                }
                             }
-                            .padding(16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .fill(Color.black.opacity(0.4))
-                                    .overlay {
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .stroke(GameTheme.goldAccent.opacity(0.3), lineWidth: 1)
-                                    }
-                            )
                         }
                     }
+                    .padding(DesignSystem.Spacing.md)
+                    .background(
+                        RoundedRectangle(cornerRadius: DesignSystem.Radius.md, style: .continuous)
+                            .fill(index == engine.activePlayerIndex ? DesignSystem.Colors.surfaceElevated : DesignSystem.Colors.surface)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: DesignSystem.Radius.md, style: .continuous)
+                            .stroke(index == engine.activePlayerIndex ? DesignSystem.Colors.accent.opacity(0.35) : Color.white.opacity(0.06), lineWidth: 1)
+                    )
+                    .accessibilityElement(children: .combine)
                 }
-                .frame(maxWidth: 320)
-                
-                Button("Cancel") {
-                    onCancel()
-                }
-                .font(.custom("Marker Felt", size: 18))
-                .foregroundStyle(GameTheme.champagne)
-                .padding(.horizontal, 32)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.white.opacity(0.1))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                        }
-                )
             }
-            .padding(24)
         }
     }
-}
 
-#Preview {
-    GameView()
-        .environmentObject(GameEngine())
+    private var actionsSection: some View {
+        SectionCard(title: "Actions", systemImage: "hand.tap.fill") {
+            VStack(spacing: DesignSystem.Spacing.sm) {
+                CasinoButton("Hit", systemImage: "plus.circle.fill", style: .primary, isEnabled: engine.canAct && !engine.isActivePlayerAI) {
+                    performEngineAction(named: "hit")
+                }
+
+                HStack(spacing: DesignSystem.Spacing.sm) {
+                    CasinoButton("Stay", systemImage: "pause.circle.fill", style: .secondary, isEnabled: engine.canAct && !engine.isActivePlayerAI) {
+                        performEngineAction(named: "stay")
+                    }
+
+                    CasinoButton("New Game", systemImage: "arrow.clockwise.circle.fill", style: .secondary) {
+                        engine.startNewGame(playerCount: max(engine.players.count, 3))
+                    }
+                }
+            }
+        }
+    }
+
+    private var statusSection: some View {
+        SectionCard(title: "Status", systemImage: "waveform.path.ecg") {
+            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
+                if let lastCard = engine.lastDrawnCard {
+                    Text("Last draw: \(describe(card: lastCard))")
+                        .font(DesignSystem.Typography.body)
+                        .foregroundStyle(DesignSystem.Colors.textPrimary)
+                } else {
+                    Text("No cards drawn yet this turn.")
+                        .font(DesignSystem.Typography.body)
+                        .foregroundStyle(DesignSystem.Colors.textSecondary)
+                }
+
+                if engine.pendingFreezeAction {
+                    Text("Freeze action pending target selection.")
+                        .font(DesignSystem.Typography.footnote)
+                        .foregroundStyle(DesignSystem.Colors.warning)
+                }
+
+                if let frozenPlayerName = engine.frozenPlayerName {
+                    Text("\(frozenPlayerName) was frozen.")
+                        .font(DesignSystem.Typography.footnote)
+                        .foregroundStyle(DesignSystem.Colors.info)
+                }
+
+                if let flippedSevenPlayerName = engine.flippedSevenPlayerName {
+                    Text("\(flippedSevenPlayerName) flipped seven.")
+                        .font(DesignSystem.Typography.footnote)
+                        .foregroundStyle(DesignSystem.Colors.success)
+                }
+
+                if session.iapManager.isAdFree {
+                    DisclosureNoticeCard(
+                        title: "Ad-Free Enabled",
+                        bodyText: "Rewarded and banner placements are disabled because this upgrade is active.",
+                        systemImage: "nosign"
+                    )
+                }
+            }
+        }
+    }
+
+    private var bottomBanner: some View {
+        AdPlaceholderView(
+            title: "Banner Placement",
+            subtitle: "Future gameplay banner area. Hidden for Ad-Free users and shown only after applicable consent handling.",
+            systemImage: "rectangle.bottomthird.inset.filled",
+            showConsentBadge: true
+        )
+        .padding(.top, DesignSystem.Spacing.sm)
+        .background(DesignSystem.Colors.background.opacity(0.01))
+    }
+
+    private var dealerName: String {
+        guard engine.players.indices.contains(engine.dealerIndex) else { return "—" }
+        return engine.players[engine.dealerIndex].name
+    }
+
+    private func bannerText(_ text: String, color: Color, icon: String) -> some View {
+        HStack(alignment: .top, spacing: DesignSystem.Spacing.sm) {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+
+            Text(text)
+                .font(DesignSystem.Typography.body)
+                .foregroundStyle(DesignSystem.Colors.textPrimary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Spacer()
+        }
+        .padding(DesignSystem.Spacing.md)
+        .background(
+            RoundedRectangle(cornerRadius: DesignSystem.Radius.md, style: .continuous)
+                .fill(color.opacity(0.12))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: DesignSystem.Radius.md, style: .continuous)
+                .stroke(color.opacity(0.24), lineWidth: 1)
+        )
+    }
+
+    private func chip(value: String, color: Color) -> some View {
+        Text(value)
+            .font(DesignSystem.Typography.captionStrong)
+            .foregroundStyle(DesignSystem.Colors.textPrimary)
+            .padding(.horizontal, DesignSystem.Spacing.sm)
+            .padding(.vertical, DesignSystem.Spacing.xs)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(color.opacity(0.18))
+            )
+            .overlay(
+                Capsule(style: .continuous)
+                    .stroke(color.opacity(0.35), lineWidth: 1)
+            )
+    }
+
+    private func statusText(for hand: RoundHand, isActive: Bool) -> String {
+        if hand.isBusted { return "Busted" }
+        if hand.isFrozen { return "Frozen" }
+        if hand.isStayed { return "Stayed" }
+        if isActive { return "Active turn" }
+        return "Waiting"
+    }
+
+    private func describe(card: Card) -> String {
+        switch card.kind {
+        case .number(let value):
+            return "Number \(value)"
+        case .action(let action):
+            return action.rawValue
+        case .modifier(let modifier):
+            return modifier.rawValue
+        }
+    }
+
+    private func performEngineAction(named action: String) {
+        engine.lastAction = action.capitalized
+    }
+
+    private func simulateRewardedSecondChance() {
+        guard session.canShowRewardedSecondChance else {
+            showPrivacySheet = true
+            return
+        }
+
+        rewardLoading = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            rewardLoading = false
+            showRewardPrompt = false
+            engine.lastAction = "Rewarded Second Chance granted"
+        }
+    }
 }
